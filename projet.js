@@ -238,6 +238,19 @@ function ajouterIdentifiantTicket(){
     }while((isNaN(idSaisi)|| idSaisi<1))
         return idSaisi
 }
+function ajouterNomVille(){
+  let nomSaisi
+  do{
+    nomSaisi=prompt("Nom du ville de depart  : ")
+    if (!limitname.test(nomSaisi) || nomSaisi === " " ) {
+    console.log("Le nom n'est pas inclus (invalide).");
+     } else {
+    console.log("Le nom est inclus et valide !");
+} 
+  
+  }while((!limitname.test(nomSaisi) || nomSaisi === " "))
+    return nomSaisi
+}
 function acheterTicket(tab,id){
    let nom=ajouterNom();
    let Place=0
@@ -321,8 +334,7 @@ function annulerTicket(id){
     else{
         const index = chercherTicket(id,tickets)
         let indexTrip =tickets[index].tripId
-        tickets.splice(index,1) // splice pour suprimer l'element d'indice "index"
-        console.log(tickets) 
+        tickets.splice(index,1) // splice pour suprimer l'element d'indice "index" 
         for (const variable of trips){
             if (variable.id==indexTrip){
                 variable. availableSeats ++
@@ -335,17 +347,40 @@ function annulerTicket(id){
 
 }
 function rechercherTicket(str){
+    let exicte=false 
     console.log(`Nom du passager ${str}`)
     for(const variable of tickets){
-        if (variable.passengerName===str){
+        if ((variable.passengerName).toUpperCase()===str.toUpperCase()){// ou cas ou il a taper le nom lower ou upper de qui est enrejitrer 
              console.log(` Ticket#${variable.id} `)
              console.log(` Passager : ${variable.passengerName}`)
              console.log(` Trajet :${chercherTragets(trips,variable.tripId)} `)
              console.log(` Place : ${variable.seatNumber}`)
-             console.log(` Prix  :${variable.price} DH`)    
+             console.log(` Prix  :${variable.price} DH`)  
+             exicte=true
+
         }
     }
+    if(!exicte){
+        console.log("Ce passager n'exicte pas ")
+    }
 
+}
+function Filtrer(str,tab){
+    let exicte =false
+    for (const variable of tab){
+        // if ((variable.departure).toUpperCase()!==str.toUpperCase()){
+        //     return `${str} n'exicte pas dans les voyages `
+        // }
+        if ((variable.departure).toUpperCase()===str.toUpperCase()) {
+            exicte=true;
+            console.log (`${variable.departure}  → ${variable.destination} : ${variable.price} DH `)
+        }
+
+    }
+    if(!exicte){
+        console.log(`${str} n'exicte pas dans les voyages `)
+
+    }
 }
 
 function main() {
@@ -388,6 +423,8 @@ function main() {
                 rechercherTicket(str) 
                 break;
             case 6: 
+                let str6=ajouterNomVille()
+                 Filtrer(str6,trips)
                      break;
             case 7: 
                      break;
