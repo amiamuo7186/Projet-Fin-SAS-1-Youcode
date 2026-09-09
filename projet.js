@@ -289,6 +289,7 @@ function chercherTragets(tab,id){
         }
     }
 }
+
 function afficherTickets(tab){
     console.log("=== TICKETS ===")
     // console.log (tab)// le tableau nest pas vide je dois faire afficher apres quitter  
@@ -333,6 +334,19 @@ function annulerTicket(id){
 
 
 }
+function rechercherTicket(str){
+    console.log(`Nom du passager ${str}`)
+    for(const variable of tickets){
+        if (variable.passengerName===str){
+             console.log(` Ticket#${variable.id} `)
+             console.log(` Passager : ${variable.passengerName}`)
+             console.log(` Trajet :${chercherTragets(trips,variable.tripId)} `)
+             console.log(` Place : ${variable.seatNumber}`)
+             console.log(` Prix  :${variable.price} DH`)    
+        }
+    }
+
+}
 
 function main() {
     let n;
@@ -370,7 +384,8 @@ function main() {
                 annulerTicket(id4)
                 break;
             case 5:
-                
+                let str=ajouterNom()
+                rechercherTicket(str) 
                 break;
             case 6: 
                      break;
