@@ -382,6 +382,39 @@ function Filtrer(str,tab){
 
     }
 }
+function bubbleSort(arr){
+    let ok 
+    do{
+        ok=false 
+        for (let i=0;i<arr.length-1;i++){
+            if(arr[i]>arr[i+1]){
+                let temp=arr[i]
+                arr[i]=arr[i+1]
+                arr[i+1]=temp
+                ok=true
+            }
+        }
+    }while(ok)
+        return arr
+}
+function TrierPrix(tab){
+    let valeur=tab[0].price;
+    let max=[];
+    max[0]=valeur;
+    for(let i=1 ; i<tab.length;i++){
+        max[i]=tab[i].price;
+      }
+      max= bubbleSort(max)
+      return max        
+}
+function affichertrier(tab){
+   let tab1  =TrierPrix(tab)
+   console.log(tab1)
+    for(let i=0;i<tab1.length;i++){
+        console.log(`${tab[i].departure}  →${tab[i].departure} : ${tab1[i]} DH  `)
+    }
+}
+
 
 function main() {
     let n;
@@ -427,6 +460,7 @@ function main() {
                  Filtrer(str6,trips)
                      break;
             case 7: 
+                  affichertrier(trips)
                      break;
             
         
