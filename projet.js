@@ -181,8 +181,9 @@ var prompt = require('prompt-sync')();
         availableSeats: 50
     }
 ];
-// const limitname=/^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]+$/;// une expression reguliere pour limiter dans les alphabets avec limitname précisément un objet de type RegExp
-let Place=0
+const limitname = /^[a-zA-Z\s'-]+$/;   ;// une expression reguliere pour limiter dans les alphabets avec limitname précisément un objet de type RegExp
+let idc=0
+const tickets = [];
 
 
 function afficherTrajets(tab){
@@ -200,13 +201,13 @@ function ajouterNom(){
   let nomSaisi
   do{
     nomSaisi=prompt("Nom du passager : ")
-    if ( nomSaisi == " " ) {
+    if (!limitname.test(nomSaisi) || nomSaisi === " " ) {
     console.log("Le nom n'est pas inclus (invalide).");
      } else {
     console.log("Le nom est inclus et valide !");
 } 
   
-  }while((nomSaisi == " "))
+  }while((!limitname.test(nomSaisi) || nomSaisi === " "))
     return nomSaisi
 }
 function ajouterIdentifiant(){
@@ -224,9 +225,8 @@ function ajouterIdentifiant(){
 
 }
 function acheterTicket(tab,id){
-   
    let nom=ajouterNom();
-//    id=ajouterIdentifiant();
+   let Place=0
    let trajetexicte={}
    let exicte=false
    for(const variable of tab){
@@ -234,6 +234,7 @@ function acheterTicket(tab,id){
         exicte=true
         trajetexicte=variable
         variable.availableSeats--
+        Place=50-variable.availableSeats
         break
     } 
    }
@@ -245,16 +246,46 @@ function acheterTicket(tab,id){
         console.log("Train complet.")
     }
     else {
-        Place++
+        idc++
+        tickets.push(
+            {id:idc,
+             passengerName:nom,
+             tripId:trajetexicte.id, 
+             seatNumber:Place, 
+             price:trajetexicte. price})
         console.log("Ticket acheté avec succès.")
         console.log(`Ticket #${trajetexicte.id}`)
         console.log(`Passager : ${nom}`)
         console.log(`Trajet : ${trajetexicte.departure} → ${trajetexicte.destination}`)
         console.log(`Place :${Place}`)
         console.log(`Prix : ${trajetexicte. price}DH`)
+        
     }
    }
+
 }
+function chercherTragets(tab,id){
+    for (const variable of tab ){
+        if (variable.id ===id){
+            return `${variable.departure}  → ${variable.destination} `
+        }
+    }
+}
+function afficherTickets(tab){
+    console.log("=== TICKETS ===")
+    console.log (tab)
+    for(const variable of tab ){
+        console.log(` Ticket#${variable.id} `)
+        console.log(` Passager : ${variable.passengerName}`)
+        console.log(` Trajet :${chercherTragets(trips,variable.tripId)} `)
+        console.log(`Place : ${variable.seatNumber} DH`)
+        console.log(`Prix  :${variable.price} `)   
+        console.log(`*************************************`)    
+
+    }
+
+}
+
 
 function main() {
     let n;
@@ -282,10 +313,11 @@ function main() {
                 break;
             case 2:
                 let id=ajouterIdentifiant();
-                acheterTicket(trips,id)
+                acheterTicket(trips,id);
                 break;
             case 3:
-                
+                console.log("salam")
+                afficherTickets(tickets);
                 break;
             case 4:
                 
@@ -307,3 +339,4 @@ function main() {
 }
 
 main()
+
