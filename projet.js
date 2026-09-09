@@ -181,7 +181,8 @@ var prompt = require('prompt-sync')();
         availableSeats: 50
     }
 ];
-const limitname=/^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]+$/;// une expression reguliere pour limiter dans les alphabets avec limitname précisément un objet de type RegExp
+// const limitname=/^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]+$/;// une expression reguliere pour limiter dans les alphabets avec limitname précisément un objet de type RegExp
+let Place=0
 
 
 function afficherTrajets(tab){
@@ -192,21 +193,67 @@ function afficherTrajets(tab){
   console.log(`Arrivée : ${variable.arrivalTime} `)
   console.log(`Prix : ${variable.price} DH`)
   console.log(`Places disponibles :${variable.availableSeats} `)   
-  console.log(`                                  
-      `)     
+  console.log(`*************************************`)     
 }  
 }
 function ajouterNom(){
   let nomSaisi
   do{
     nomSaisi=prompt("Nom du passager : ")
-    if (limitname.test(nomSaisi.trim()) ||nomSaisi === "" ) {
-    console.log("Le nom est inclus et valide !");
-     } else {
+    if ( nomSaisi == " " ) {
     console.log("Le nom n'est pas inclus (invalide).");
+     } else {
+    console.log("Le nom est inclus et valide !");
 } 
   
-  }while((!limitname.test(nomSaisi) || nomSaisi === ""))
+  }while((nomSaisi == " "))
+    return nomSaisi
+}
+function ajouterIdentifiant(){
+    let idSaisi
+    do{
+        idSaisi=Number(prompt("Identifiant du trajet : "))
+        if(isNaN(idSaisi)|| idSaisi<1 || idSaisi>20){
+            console.log("choisi un id entre 1 et 20")
+            }
+        else{
+            console.log("id est valide ! ")
+        }     
+    }while((isNaN(idSaisi)|| idSaisi<1 || idSaisi>20))
+        return idSaisi
+
+}
+function acheterTicket(tab,id){
+   
+   let nom=ajouterNom();
+//    id=ajouterIdentifiant();
+   let trajetexicte={}
+   let exicte=false
+   for(const variable of tab){
+    if(variable.id ==id){
+        exicte=true
+        trajetexicte=variable
+        variable.availableSeats--
+        break
+    } 
+   }
+   if(!exicte){
+    console.log("Trajet introuvable.")
+   }
+   else{
+    if ( trajetexicte.availableSeats===0){
+        console.log("Train complet.")
+    }
+    else {
+        Place++
+        console.log("Ticket acheté avec succès.")
+        console.log(`Ticket #${trajetexicte.id}`)
+        console.log(`Passager : ${nom}`)
+        console.log(`Trajet : ${trajetexicte.departure} → ${trajetexicte.destination}`)
+        console.log(`Place :${Place}`)
+        console.log(`Prix : ${trajetexicte. price}DH`)
+    }
+   }
 }
 
 function main() {
@@ -234,7 +281,8 @@ function main() {
                 afficherTrajets(trips);
                 break;
             case 2:
-                
+                let id=ajouterIdentifiant();
+                acheterTicket(trips,id)
                 break;
             case 3:
                 
