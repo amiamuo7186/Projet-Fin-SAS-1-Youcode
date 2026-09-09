@@ -184,6 +184,7 @@ var prompt = require('prompt-sync')();
 const limitname = /^[a-zA-Z\s'-]+$/;   ;// une expression reguliere pour limiter dans les alphabets avec limitname précisément un objet de type RegExp
 let idc=0
 const tickets = [];
+ 
 
 
 function afficherTrajets(tab){
@@ -224,6 +225,19 @@ function ajouterIdentifiant(){
         return idSaisi
 
 }
+function ajouterIdentifiantTicket(){
+    let idSaisi
+    do{
+        idSaisi=Number(prompt("Identifiant du Ticket : "))
+        if(isNaN(idSaisi)|| idSaisi<1 ){
+            console.log("choisi un id superieur de 1")
+            }
+        else{
+            console.log("id est valide ! ")
+        }     
+    }while((isNaN(idSaisi)|| idSaisi<1))
+        return idSaisi
+}
 function acheterTicket(tab,id){
    let nom=ajouterNom();
    let Place=0
@@ -247,18 +261,21 @@ function acheterTicket(tab,id){
     }
     else {
         idc++
+        console.log(idc);
         tickets.push(
             {id:idc,
              passengerName:nom,
              tripId:trajetexicte.id, 
              seatNumber:Place, 
              price:trajetexicte. price})
+       
         console.log("Ticket acheté avec succès.")
         console.log(`Ticket #${trajetexicte.id}`)
         console.log(`Passager : ${nom}`)
         console.log(`Trajet : ${trajetexicte.departure} → ${trajetexicte.destination}`)
         console.log(`Place :${Place}`)
         console.log(`Prix : ${trajetexicte. price}DH`)
+        
         
     }
    }
@@ -267,25 +284,55 @@ function acheterTicket(tab,id){
 function chercherTragets(tab,id){
     for (const variable of tab ){
         if (variable.id ===id){
+            
             return `${variable.departure}  → ${variable.destination} `
         }
     }
 }
 function afficherTickets(tab){
     console.log("=== TICKETS ===")
-    console.log (tab)
+    // console.log (tab)// le tableau nest pas vide je dois faire afficher apres quitter  
     for(const variable of tab ){
         console.log(` Ticket#${variable.id} `)
         console.log(` Passager : ${variable.passengerName}`)
         console.log(` Trajet :${chercherTragets(trips,variable.tripId)} `)
-        console.log(`Place : ${variable.seatNumber} DH`)
-        console.log(`Prix  :${variable.price} `)   
+        console.log(` Place : ${variable.seatNumber}`)
+        console.log(` Prix  :${variable.price} DH`)   
         console.log(`*************************************`)    
 
     }
 
 }
+function chercherTicket(id,tab){
+    for(  let i = 0;i<tab.length;i++){
+        if (tab[i].id===id){
+             return i
+        }   
+    }
 
+    return false
+}
+
+function annulerTicket(id){
+    if(chercherTicket(id,tickets)===false){// === car le 0 va etre traite comme false 
+        console.log("Ticket introuvable.")
+    }
+    else{
+        const index = chercherTicket(id,tickets)
+        let indexTrip =tickets[index].tripId
+        tickets.splice(index,1) // splice pour suprimer l'element d'indice "index"
+        console.log(tickets) 
+        for (const variable of trips){
+            if (variable.id==indexTrip){
+                variable. availableSeats ++
+            }
+        }
+        console.log (`Identifiant du ticket ${id}`)
+        console.log ("Ticket annulé avec succès.") 
+    }
+
+
+}
 
 function main() {
     let n;
@@ -316,11 +363,11 @@ function main() {
                 acheterTicket(trips,id);
                 break;
             case 3:
-                console.log("salam")
                 afficherTickets(tickets);
                 break;
             case 4:
-                
+                 let id4=ajouterIdentifiantTicket();
+                annulerTicket(id4)
                 break;
             case 5:
                 
