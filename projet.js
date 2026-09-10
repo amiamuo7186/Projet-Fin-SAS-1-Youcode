@@ -1,4 +1,5 @@
-var prompt = require('prompt-sync')(); 
+var prompt = require('prompt-sync')();
+// data  
   const trips = [
     {
         id: 1,
@@ -181,9 +182,11 @@ var prompt = require('prompt-sync')();
         availableSeats: 50
     }
 ];
+// declaration des variables globales 
 const limitname = /^[a-zA-Z\s'-]+$/;   ;// une expression reguliere pour limiter dans les alphabets avec limitname précisément un objet de type RegExp
-let idc=0
+let idT=0
 const tickets = [];
+// fonction Principale 1 : Afficher les trajets
 function afficherTrajets(tab){
   console.log ("=== TRAJETS DISPONIBLES ===")
   for (const variable of tab) {
@@ -195,7 +198,7 @@ function afficherTrajets(tab){
   console.log(`*************************************`)     
 }  
 }
-function ajouterNom(){
+function ajouterNom(){// fonction pour check que le nom est valide 
   let nomSaisi
   do{
     nomSaisi=prompt("Nom du passager : ")
@@ -208,7 +211,7 @@ function ajouterNom(){
   }while((!limitname.test(nomSaisi) || nomSaisi === " "))
     return nomSaisi
 }
-function ajouterIdentifiant(){
+function ajouterIdentifiant(){// fonction pour check que l'id du trajet choisi est valide 
     let idSaisi
     do{
         idSaisi=Number(prompt("Identifiant du trajet : "))
@@ -222,7 +225,7 @@ function ajouterIdentifiant(){
         return idSaisi
 
 }
-function ajouterIdentifiantTicket(){
+function ajouterIdentifiantTicket(){// fonction pour check que l'id du ticket  choisi est valide 
     let idSaisi
     do{
         idSaisi=Number(prompt("Identifiant du Ticket : "))
@@ -235,7 +238,7 @@ function ajouterIdentifiantTicket(){
     }while((isNaN(idSaisi)|| idSaisi<1))
         return idSaisi
 }
-function ajouterNomVille(){
+function ajouterNomVille(){// fonction pour check que le nom du ville est validé
   let nomSaisi
   do{
     nomSaisi=prompt("Nom du ville de depart  : ")
@@ -248,7 +251,7 @@ function ajouterNomVille(){
   }while((!limitname.test(nomSaisi) || nomSaisi === " "))
     return nomSaisi
 }
-function missingId(tab,id) {
+function missingPlace(tab,id) { // cette fonction sert a cheker apres l annulation pour ne pas sauter des places vide 
     let tripexicte=[]
     for( let i=0;i<tab.length;i++){
         if(tab[i].tripId==id){
@@ -269,6 +272,7 @@ function missingId(tab,id) {
     }
   }
 }
+// fonction Principale 2 : Acheter un ticket
 function acheterTicket(tab,id){
    let nom=ajouterNom();
    let trajetexicte=null
@@ -286,19 +290,18 @@ function acheterTicket(tab,id){
     }
     else {
         // let Place=50-trajetexicte.availableSeats+1
-        let Place=missingId(tickets,id)
+        let Place=missingPlace(tickets,id)
         trajetexicte.availableSeats--
-        // idc =missingId(tickets)// ou cas ou d'annulation un id reste vide pour le prochain ticket 
-        idc++
+        idT++
         tickets.push(
-            {id:idc,
+            {id:idT,
              passengerName:nom,
              tripId:trajetexicte.id, 
              seatNumber:Place, 
              price:trajetexicte. price})
        
         console.log("Ticket acheté avec succès.")
-        console.log(`Ticket #${idc}`)
+        console.log(`Ticket #${idT}`)
         console.log(`Passager : ${nom}`)
         console.log(`Trajet : ${trajetexicte.departure} → ${trajetexicte.destination}`)
         console.log(`Place :${Place}`)
@@ -307,7 +310,7 @@ function acheterTicket(tab,id){
         
     }
 }
-function chercherTragets(tab,id){
+function chercherTragets(tab,id){// aide la fonction d'affichage pour afficher le trip match le ticket
     for (const variable of tab ){
         if (variable.id ===id){
             
@@ -315,9 +318,10 @@ function chercherTragets(tab,id){
         }
     }
 }
+
+// fonction Principale 3 : Afficher les tickets
 function afficherTickets(tab){
     console.log("=== TICKETS ===")
-    // console.log (tab)// le tableau nest pas vide je dois faire afficher apres quitter  
     for(const variable of tab ){
         console.log(` Ticket#${variable.id} `)
         console.log(` Passager : ${variable.passengerName}`)
@@ -325,29 +329,27 @@ function afficherTickets(tab){
         console.log(` Place : ${variable.seatNumber}`)
         console.log(` Prix  :${variable.price} DH`)   
         console.log(`*************************************`)    
-
     }
-
 }
-function chercherTicket(id,tab){
+function chercherTicket(id,tab){// pour checker si le ticket exicte ou non
     for(  let i = 0;i<tab.length;i++){
         if (tab[i].id===id){
              return i
         }   
     }
-
     return false
 }
+// fonction Principale 4 : Annuler un ticket
 function annulerTicket(id){
     if(chercherTicket(id,tickets)===false){// === car le 0 va etre traite comme false 
         console.log("Ticket introuvable.")
     }
     else{
-        const index = chercherTicket(id,tickets)
-        let indexTrip =tickets[index].tripId
+        const index = chercherTicket(id,tickets)// le i est lindex ou l'object qu'on a entré l'id 
+        let indexTrip =tickets[index].tripId // id de trip dapres le tableau des objects de tickets  pour incrementer apres lannulation  
         tickets.splice(index,1) // splice pour suprimer l'element d'indice "index" 
         for (const variable of trips){
-            if (variable.id==indexTrip){
+            if (variable.id===indexTrip){ 
                 variable. availableSeats ++
             }
         }
@@ -357,8 +359,9 @@ function annulerTicket(id){
 
 
 }
+// fonction Principale 5 :Rechercher un ticket par le nom de ville de depart 
 function rechercherTicket(str){
-    let exicte=false 
+    let exicte=false  // pour tester l'exception 
     console.log(`Nom du passager ${str}`)
     for(const variable of tickets){
         if ((variable.passengerName).toUpperCase()===str.toUpperCase()){// ou cas ou il a taper le nom lower ou upper de qui est enrejitrer 
@@ -368,37 +371,31 @@ function rechercherTicket(str){
              console.log(` Place : ${variable.seatNumber}`)
              console.log(` Prix  :${variable.price} DH`)  
              exicte=true
-
         }
     }
     if(!exicte){
         console.log("Ce passager n'exicte pas ")
     }
-
 }
+// fonction Principale 6 :Filtrer les trajets par le nom de ville de depart 
 function Filtrer(str,tab){
     let exicte =false
     for (const variable of tab){
-        // if ((variable.departure).toUpperCase()!==str.toUpperCase()){
-        //     return `${str} n'exicte pas dans les voyages `
-        // }
         if ((variable.departure).toUpperCase()===str.toUpperCase()) {
             exicte=true;
             console.log (`${variable.departure}  → ${variable.destination} : ${variable.price} DH `)
         }
-
     }
     if(!exicte){
         console.log(`${str} n'exicte pas dans les voyages `)
-
     }
 }
-function bubbleSort(arr){
+function bubbleSort(arr){// tri le tableau avec bubble sort 
     let ok 
     do{
         ok=false 
         for (let i=0;i<arr.length-1;i++){
-            if(arr[i]>arr[i+1]){
+            if(arr[i].price>arr[i+1].price){
                 let temp=arr[i]
                 arr[i]=arr[i+1]
                 arr[i+1]=temp
@@ -408,56 +405,54 @@ function bubbleSort(arr){
     }while(ok)
         return arr
 }
-function TrierPrix(tab){
-    let valeur=tab[0].price;
-    let max=[];
-    max[0]=valeur;
-    for(let i=1 ; i<tab.length;i++){
-        max[i]=tab[i].price;
-      }
-      max= bubbleSort(max)
-      return max        
-}
+// fonction Principale 7 :Trier les trajets avec le prix  
 function affichertrier(tab){
-   let tab1  =TrierPrix(tab)
+   let tab1  =bubbleSort(tab)// le tab1 est un tableau des prix qui ont trié 
    console.log(tab1)
-    for(let i=0;i<tab1.length;i++){
-        console.log(`${tab[i].departure}  →${tab[i].departure} : ${tab1[i]} DH  `)
+    for(let i=0;i<tab1.length;i++){ 
+        console.log(`${tab1[i].departure}  →${tab1[i].destination} : ${tab1[i].price} DH  `)
     }
 }
-function nombreTotalTickets(tab){
-    // console.log(`Nombre total de tickets : ${tab.length} `);
+// fonction bonus 
+function nombreTotalTickets(tab){// Nombre total de tickets vendus
      return tab.length;
 }
-function chiffreAffairesTotal(tab){
+function chiffreAffairesTotal(tab){// Chiffre d'affaires total
     let total = 0;
     for (let i = 0; i < tab.length; i++) {
         total += tab[i].price;
     }
     console.log(`Chiffre d'affaires total : ${total} DH `);
 }
-function  maximum (tab){
-    let max=0
-    let id
-     for (const variable of tab){
-        if (variable===trips.id){
-            if(max<50-trips.availableSeats){
-                max=50-trips.availableSeats
-                  id =trips.id
-            }    
-        }
-     }
-     console.log( chercherTragets(trips,id))
-     return max
+function maximum(tab){// calcule le maximum du tableau et retourne un object 
+    let  max={conteur:tab[0].conteur,
+        id:tab[0].id}
+    for ( const variable of tab){
+        if(variable.conteur>max.conteur){
+            max.conteur=variable.conteur
+            max.id=variable.id
+            }
+    }
+    return max;
 }
 function plusVendu(tab){
-    let max= tab[0].seatNumber
-    for (const variable of tab){ 
-        if (variable.seatNumber>max)
-            max=variable.seatNumber
+    let arr=[]
+    for(let i =0;i<tab.length;i++){
+         let count =0
+        for (let j =0;j<tickets.length;j++){
+            if (tab[i].id===tickets[j].tripId){
+                count++
+                arr.push({conteur:count,id:tab[i].id})
+            }
+        }
     }
-   
-     console.log (`${maximum(arr)} tickets vendus`)
+    let max1 = maximum(arr);
+    for (const variable of tab ){
+        if (variable.id ===max1.id){
+            console.log `${variable.departure}  → ${variable.destination} `
+        }
+    }
+    console.log(max1.conteur)
 }
 function main() {
     let n;
@@ -520,7 +515,7 @@ function main() {
                 console.log("Votre reposne n'etait pas acceptable, Svp donne moi une valeur entre 0 et 10");
                 break;
         }
-    } while (n!=0)
+    } while (n!==0)
 }
 
 main()
