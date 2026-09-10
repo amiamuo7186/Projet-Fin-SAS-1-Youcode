@@ -283,8 +283,8 @@ function acheterTicket(tab,id){
     }
     else {
         let Place=50-trajetexicte.availableSeats+1
-        trajetexicte.availableSeats--
-       let idc =missingId(tickets)// ou cas ou d'annulqtion un id reste vide pour le prochain ticket 
+        trajetexicte.availableSeats-- // diminuer le nombre de places disponibles
+       let idc =missingId(tickets)// ou cas ou d'annulation un id reste vide pour le prochain ticket 
         tickets.push(
             {id:idc,
              passengerName:nom,
@@ -422,6 +422,10 @@ function affichertrier(tab){
         console.log(`${tab[i].departure}  →${tab[i].departure} : ${tab1[i]} DH  `)
     }
 }
+function nombreTotalTickets(tab){
+    console.log(`Nombre total de tickets : ${tab.length} `);
+     
+}
 
 
 function main() {
@@ -437,6 +441,8 @@ function main() {
         console.log("5. Rechercher un ticket ");
         console.log("6. Filtrer les trajets ");
         console.log("7. Trier les trajets ");
+        console.log("8. Nombre total de tickets vendus ");
+        console.log("9 : Chiffre d'affaires total");
         console.log("0. Quitter ")
       
         console.log("************************");
@@ -470,10 +476,12 @@ function main() {
             case 7: 
                   affichertrier(trips)
                      break;
-            
+            case 8:
+                  nombreTotalTickets(tickets)
+                  break;
         
             default:
-                console.log("Votre reposne n'etait pas acceptable, Svp donne moi une valeur entre 0 et 7");
+                console.log("Votre reposne n'etait pas acceptable, Svp donne moi une valeur entre 0 et 10");
                 break;
         }
     } while (n!=0)
