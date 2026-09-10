@@ -428,6 +428,17 @@ function chiffreAffairesTotal(tab){
     }
     console.log(`Chiffre d'affaires total : ${total} DH `);
 }
+function  plusVendu(id,tab){
+    let arr=[]
+    for (const variable of tab){
+        if (variable.tripId===id){
+            arr.push(variable)
+            // console.log (arr)
+        }
+    }
+    console.log(chercherTragets(trips,id))
+    console.log(`${nombreTotalTickets(arr)} tickets vendus`)
+}
 function main() {
     let n;
     do {
@@ -444,12 +455,11 @@ function main() {
         console.log("8. Nombre total de tickets vendus ");
         console.log("9 : Chiffre d'affaires total");
         console.log("0. Quitter ")
-      
         console.log("************************");
-    
-        n = Number(prompt("Votre choix: "))
+         n = Number(prompt("Votre choix: "))
         switch (n) {
             case 0: 
+                    console.log (" merci pour votre temps !")
                      break;
             case 1:
                 afficherTrajets(trips);
@@ -482,6 +492,10 @@ function main() {
             case 9: 
                   chiffreAffairesTotal(tickets)
                   break;
+            case 10 :
+                    let id10= ajouterIdentifiant()
+                     plusVendu(id10,tickets) 
+                     break;     
             default:
                 console.log("Votre reposne n'etait pas acceptable, Svp donne moi une valeur entre 0 et 10");
                 break;
