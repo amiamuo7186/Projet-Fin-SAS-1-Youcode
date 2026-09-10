@@ -248,12 +248,18 @@ function ajouterNomVille(){
   }while((!limitname.test(nomSaisi) || nomSaisi === " "))
     return nomSaisi
 }
-function missingId(tab) {
+function missingId(tab,id) {
+    let tripexicte=[]
+    for( let i=0;i<tab.length;i++){
+        if(tab[i].tripId==id){
+            tripexicte.push(tab[i])
+        }
+    }
   let ok;
-  for (let i = 1; i <= tab.length + 1; i++) {
+  for (let i = 1; i <= 50 + 1; i++) {
     ok = false;
-    for (let j = 0; j < tab.length; j++) {
-      if (tab[j].id == i) { // On compare avec la propriété .id du ticket
+    for (let j = 0; j < tripexicte.length; j++) {
+      if (tripexicte[j].seatNumber == i) { //
         ok = true;
         break;
       }
@@ -279,9 +285,11 @@ function acheterTicket(tab,id){
         console.log("Train complet.")
     }
     else {
-        let Place=50-trajetexicte.availableSeats+1
-        trajetexicte.availableSeats-- // diminuer le nombre de places disponibles
-       let idc =missingId(tickets)// ou cas ou d'annulation un id reste vide pour le prochain ticket 
+        // let Place=50-trajetexicte.availableSeats+1
+        let Place=missingId(tickets,id)
+        trajetexicte.availableSeats--
+        // idc =missingId(tickets)// ou cas ou d'annulation un id reste vide pour le prochain ticket 
+        idc++
         tickets.push(
             {id:idc,
              passengerName:nom,
@@ -428,16 +436,28 @@ function chiffreAffairesTotal(tab){
     }
     console.log(`Chiffre d'affaires total : ${total} DH `);
 }
-function  plusVendu(id,tab){
-    let arr=[]
-    for (const variable of tab){
-        if (variable.tripId===id){
-            arr.push(variable)
-            // console.log (arr)
+function  maximum (tab){
+    let max=0
+    let id
+     for (const variable of tab){
+        if (variable===trips.id){
+            if(max<50-trips.availableSeats){
+                max=50-trips.availableSeats
+                  id =trips.id
+            }    
         }
+     }
+     console.log( chercherTragets(trips,id))
+     return max
+}
+function plusVendu(tab){
+    let max= tab[0].seatNumber
+    for (const variable of tab){ 
+        if (variable.seatNumber>max)
+            max=variable.seatNumber
     }
-    console.log(chercherTragets(trips,id))
-    console.log(`${nombreTotalTickets(arr)} tickets vendus`)
+   
+     console.log (`${maximum(arr)} tickets vendus`)
 }
 function main() {
     let n;
@@ -454,6 +474,7 @@ function main() {
         console.log("7. Trier les trajets ");
         console.log("8. Nombre total de tickets vendus ");
         console.log("9 : Chiffre d'affaires total");
+        console.log("10 : Trajet le plus vendu");
         console.log("0. Quitter ")
         console.log("************************");
          n = Number(prompt("Votre choix: "))
@@ -493,8 +514,7 @@ function main() {
                   chiffreAffairesTotal(tickets)
                   break;
             case 10 :
-                    let id10= ajouterIdentifiant()
-                     plusVendu(id10,tickets) 
+                     plusVendu(tickets) 
                      break;     
             default:
                 console.log("Votre reposne n'etait pas acceptable, Svp donne moi une valeur entre 0 et 10");
