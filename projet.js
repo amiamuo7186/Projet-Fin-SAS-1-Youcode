@@ -251,30 +251,40 @@ function ajouterNomVille(){
   }while((!limitname.test(nomSaisi) || nomSaisi === " "))
     return nomSaisi
 }
+function missingId(tab) {
+  let ok;
+  for (let i = 1; i <= tab.length + 1; i++) {
+    ok = false;
+    for (let j = 0; j < tab.length; j++) {
+      if (tab[j].id == i) { // On compare avec la propriété .id du ticket
+        ok = true;
+        break;
+      }
+    }
+    if (!ok) {
+      return i; // Retourne le premier ID disponible
+    }
+  }
+}
 function acheterTicket(tab,id){
    let nom=ajouterNom();
-   let Place=0
-   let trajetexicte={}
-   let exicte=false
+   let trajetexicte=null
    for(const variable of tab){
     if(variable.id ==id){
-        exicte=true
-        trajetexicte=variable
-        variable.availableSeats--
-        Place=50-variable.availableSeats
+        trajetexicte=variable // stocke la variable qui valide la condition 
         break
     } 
    }
-   if(!exicte){
+   if(!trajetexicte){// si le  trajet n'exicte pas 
     console.log("Trajet introuvable.")
    }
-   else{
-    if ( trajetexicte.availableSeats===0){
+   else if( trajetexicte.availableSeats===0){
         console.log("Train complet.")
     }
     else {
-        idc++
-        console.log(idc);
+        let Place=50-trajetexicte.availableSeats+1
+        trajetexicte.availableSeats--
+       let idc =missingId(tickets)// ou cas ou d'annulqtion un id reste vide pour le prochain ticket 
         tickets.push(
             {id:idc,
              passengerName:nom,
@@ -291,8 +301,6 @@ function acheterTicket(tab,id){
         
         
     }
-   }
-
 }
 function chercherTragets(tab,id){
     for (const variable of tab ){
