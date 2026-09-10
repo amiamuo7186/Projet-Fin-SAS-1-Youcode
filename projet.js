@@ -184,9 +184,6 @@ var prompt = require('prompt-sync')();
 const limitname = /^[a-zA-Z\s'-]+$/;   ;// une expression reguliere pour limiter dans les alphabets avec limitname précisément un objet de type RegExp
 let idc=0
 const tickets = [];
- 
-
-
 function afficherTrajets(tab){
   console.log ("=== TRAJETS DISPONIBLES ===")
   for (const variable of tab) {
@@ -293,7 +290,7 @@ function acheterTicket(tab,id){
              price:trajetexicte. price})
        
         console.log("Ticket acheté avec succès.")
-        console.log(`Ticket #${trajetexicte.id}`)
+        console.log(`Ticket #${idc}`)
         console.log(`Passager : ${nom}`)
         console.log(`Trajet : ${trajetexicte.departure} → ${trajetexicte.destination}`)
         console.log(`Place :${Place}`)
@@ -310,7 +307,6 @@ function chercherTragets(tab,id){
         }
     }
 }
-
 function afficherTickets(tab){
     console.log("=== TICKETS ===")
     // console.log (tab)// le tableau nest pas vide je dois faire afficher apres quitter  
@@ -334,7 +330,6 @@ function chercherTicket(id,tab){
 
     return false
 }
-
 function annulerTicket(id){
     if(chercherTicket(id,tickets)===false){// === car le 0 va etre traite comme false 
         console.log("Ticket introuvable.")
@@ -423,11 +418,16 @@ function affichertrier(tab){
     }
 }
 function nombreTotalTickets(tab){
-    console.log(`Nombre total de tickets : ${tab.length} `);
-     
+    // console.log(`Nombre total de tickets : ${tab.length} `);
+     return tab.length;
 }
-
-
+function chiffreAffairesTotal(tab){
+    let total = 0;
+    for (let i = 0; i < tab.length; i++) {
+        total += tab[i].price;
+    }
+    console.log(`Chiffre d'affaires total : ${total} DH `);
+}
 function main() {
     let n;
     do {
@@ -477,9 +477,11 @@ function main() {
                   affichertrier(trips)
                      break;
             case 8:
-                  nombreTotalTickets(tickets)
+                   console.log(nombreTotalTickets(tickets))// j ai utiliser console log pour afficher la valeur 
                   break;
-        
+            case 9: 
+                  chiffreAffairesTotal(tickets)
+                  break;
             default:
                 console.log("Votre reposne n'etait pas acceptable, Svp donne moi une valeur entre 0 et 10");
                 break;
