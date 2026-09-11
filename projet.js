@@ -182,6 +182,7 @@ var prompt = require('prompt-sync')();
         availableSeats: 50
     }
 ];
+
 // declaration des variables globales 
 const limitname = /^[a-zA-Z\s'-]+$/;   ;// une expression reguliere pour limiter dans les alphabets avec limitname précisément un objet de type RegExp
 let idT=0
@@ -359,7 +360,7 @@ function annulerTicket(id){
 
 
 }
-// fonction Principale 5 :Rechercher un ticket par le nom de ville de depart 
+// fonction Principale 5 :Rechercher un ticket par le nom de passager
 function rechercherTicket(str){
     let exicte=false  // pour tester l'exception 
     console.log(`Nom du passager ${str}`)
@@ -415,7 +416,7 @@ function affichertrier(tab){
 }
 // fonction bonus 
 function nombreTotalTickets(tab){// Nombre total de tickets vendus
-     return tab.length;
+     console.log(`Nombre total de tickets vendus : ${tab.length}`)
 }
 function chiffreAffairesTotal(tab){// Chiffre d'affaires total
     let total = 0;
@@ -424,35 +425,25 @@ function chiffreAffairesTotal(tab){// Chiffre d'affaires total
     }
     console.log(`Chiffre d'affaires total : ${total} DH `);
 }
-function maximum(tab){// calcule le maximum du tableau et retourne un object 
-    let  max={conteur:tab[0].conteur,
-        id:tab[0].id}
-    for ( const variable of tab){
-        if(variable.conteur>max.conteur){
-            max.conteur=variable.conteur
-            max.id=variable.id
-            }
-    }
-    return max;
-}
 function plusVendu(tab){
-    let arr=[]
+    let obj = {
+        number : 0,
+        index : ""
+    }
     for(let i =0;i<tab.length;i++){
          let count =0
         for (let j =0;j<tickets.length;j++){
             if (tab[i].id===tickets[j].tripId){
-                count++
-                arr.push({conteur:count,id:tab[i].id})
+                count++              
             }
         }
-    }
-    let max1 = maximum(arr);
-    for (const variable of tab ){
-        if (variable.id ===max1.id){
-            console.log `${variable.departure}  → ${variable.destination} `
+        if (count>obj.number){
+            obj.number=count;
+            obj.index=(tab[i].departure + " → " + tab[i].destination)// probleme daffichage 
         }
     }
-    console.log(max1.conteur)
+    console.log(obj.index)
+    console.log(obj.number)
 }
 function main() {
     let n;
@@ -503,13 +494,13 @@ function main() {
                   affichertrier(trips)
                      break;
             case 8:
-                   console.log(nombreTotalTickets(tickets))// j ai utiliser console log pour afficher la valeur 
+                   nombreTotalTickets(tickets)
                   break;
             case 9: 
                   chiffreAffairesTotal(tickets)
                   break;
             case 10 :
-                     plusVendu(tickets) 
+                     plusVendu(trips) 
                      break;     
             default:
                 console.log("Votre reposne n'etait pas acceptable, Svp donne moi une valeur entre 0 et 10");
